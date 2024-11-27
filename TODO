@@ -1,0 +1,19 @@
+- landing page
+    - index.html
+- User login and authentication
+    - login.html file
+    - match inputs against database
+- take inputs for site name, site url, username, password, etc.
+    - addInfo.html
+    - on submit, encrypt and store inputs
+- suggest secure password
+    - password.html
+    - certain number of random bytes
+    - allow user to choose parameters (lowercase, uppercase, numbers, symbols, # of each used)
+- encrypt passwords for safe storage
+    - choose secure encryption
+    - store key
+    - only set key once
+- ability to see and manage all passwords
+    - manageInfo.html
+    - decrypt info on request from site
