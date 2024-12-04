@@ -1,31 +1,38 @@
 import { db } from '../app.js';
-import { encrypt } from '../encrypt.js';
+import { encrypt } from '../encrypt.mjs';
 
 const USERNAME = document.querySelector('#username');
 const PASSWORD = document.querySelector('#password');
 const SUBMIT = document.querySelector('#submit');
 const MSG = document.querySelector('#msg');
+const GOBACK = document.querySelector('#goBack');
 let sql;
 
 SUBMIT.onclick = submitFunc;
+GOBACK.onclick = () => { location.href = './login.html'; };
 
-const submitFunc = () => {
+const submitFunc = async () => {
     const usernameSaved = USERNAME.value;
     const passwordSaved = PASSWORD.value;
 
     try {
-        let [encryptUser, encryptPass] = encrypt(usernameSaved, passwordSaved);
-        sql = `INSERT INTO userLogin(username, password) VALUES (?,?)`;
-        db.run(sql, [encryptUser, encryptPass], (err) => {
-            if (err) {
-                MSG.innerHTML = `An error occurred. Please try again later.`;
-                console.error(err.message);
-                return 2;
-            }
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ usernameSaved, passwordSaved })
         });
-        MSG.style.visibility = 'inline';
-        MSG.innerHTML = 'Login added successfully!';
-        console.log('Login added.');
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            MSG.style.visibility = 'inline';
+            MSG.innerHTML = data.message;
+            GOBACK.style.visibility = 'inline';
+        } else {
+            msg.style.visibility = 'inline';
+            msg.innerHTML = data.message;
+            return 2;
+        }
     } catch(err) {
         console.log(err);
         MSG.style.visibility = 'inline';
