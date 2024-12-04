@@ -1,0 +1,3 @@
+2: Database error
+3: Login error
+4: More than one login row

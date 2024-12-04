@@ -1,3 +1,7 @@
 input {
     margin-bottom: 20px;
 }
+
+#msg {
+    visibility: hidden;
+}
