@@ -7,7 +7,7 @@ let algorithm = 'aes-256-cbc';
 let key = process.env.KEY;
 let iv = process.env.IV;
 
-export const encrypt = async (user, pass) => {
+const encrypt = async (user, pass) => {
     const cipherUser = crypto.createCipheriv(algorithm, key, iv);
     let encryptUser = cipherUser.update(user, INPUT, OUTPUT);
     encryptUser += cipherUser.final(OUTPUT);
@@ -18,3 +18,5 @@ export const encrypt = async (user, pass) => {
 
     return [ encryptUser, encryptPass ];
 }
+
+export default encrypt;
