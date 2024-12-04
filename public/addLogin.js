@@ -1,15 +1,9 @@
-import { db } from '../app.js';
-import { encrypt } from '../encrypt.mjs';
-
 const USERNAME = document.querySelector('#username');
 const PASSWORD = document.querySelector('#password');
 const SUBMIT = document.querySelector('#submit');
 const MSG = document.querySelector('#msg');
 const GOBACK = document.querySelector('#goBack');
 let sql;
-
-SUBMIT.onclick = submitFunc;
-GOBACK.onclick = () => { location.href = './login.html'; };
 
 const submitFunc = async () => {
     const usernameSaved = USERNAME.value;
@@ -40,3 +34,6 @@ const submitFunc = async () => {
         return 3;
     }
 }
+
+SUBMIT.onclick = submitFunc;
+GOBACK.onclick = () => { location.href = './login.html'; };
