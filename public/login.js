@@ -3,8 +3,6 @@ const PASSWORD = document.querySelector('#password');
 const SUBMIT = document.querySelector('#submit');
 const msg = document.querySelector('#msg');
 
-SUBMIT.onclick = submitFunc;
-
 const submitFunc = async () => {
     const username = USERNAME.value;
     const password = PASSWORD.value;
@@ -33,3 +31,5 @@ const submitFunc = async () => {
         return 3;
     }
 };
+
+SUBMIT.onclick = submitFunc;

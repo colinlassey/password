@@ -33,7 +33,7 @@ db.run(sql);
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    const encrypted = [];
+    let encrypted = [];
     encrypted = await encrypt(username, password);
 
     db.get('SELECT * FROM userLogin WHERE username = ? AND password = ?', [encrypted[0], encrypted[1]], (err, row) => {
