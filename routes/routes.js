@@ -79,4 +79,49 @@ router.post('/addLogin', async (req, res) => {
     });
 });
 
+router.post('/suggestPassword', async (req, res) => {
+    const params = req.body.params;
+    const length = req.body.passwordLen;
+    let suggestion = [];
+
+    for (let i = 0; i < length; i++) {
+        let choice = Math.floor(Math.random() * params.length);
+        suggestion += params[choice];
+    }
+
+    res.status(200).json({ message: 'Success', password: suggestion });
+});
+
+router.post('/addCredentials', async (req, res) => {
+    const name = req.body.name;
+    const url = req.body.url;
+    const user = req.body.username;
+    const pass = req.body.password;
+
+    let encrypted = [];
+    encrypted = await encrypt(user, pass);
+
+    db.get('SELECT * FROM userPasswords WHERE siteURL = ? AND username = ?', [url, encrypted[0]], (err, row) => {
+        if (err) {
+            res.status(500).json({ message: 'Database error', error: err.message });
+            return 2;
+        }
+
+        if (row) {
+            res.status(401).json({ message: 'Login already exists' });
+        } else {
+            sql = 'INSERT INTO userPasswords(siteName, siteURL, username, password) VALUES (?,?,?,?)';
+            db.run(sql, [name, url, encrypted[0], encrypted[1]], (err) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: 'Database error', error: err.message });
+                    return 2;
+                } else {
+                    res.status(200).json({ message: 'Success! Credentials added.' });
+                }
+            });
+        }
+    });
+});
+
 export default router;

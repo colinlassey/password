@@ -3,17 +3,19 @@
     - MOSTLY DONE - UNLESS YOU COUNT MAKING IT LOOK PRETTY
 - User login and authentication
     - addLogin to add login information
+    - DONE
 - take inputs for site name, site url, username, password, etc.
-    - addInfo.html
+    - addPasswords.html
     - on submit, encrypt and store inputs
+    - IN PROGRESS
+    - STILL GOTTA MAKE EVERYTHING LOOK PRETTY
 - suggest secure password
-    - password.html
+    - in addPasswords.html
     - certain number of random bytes
     - allow user to choose parameters (lowercase, uppercase, numbers, symbols, # of each used)
 - encrypt passwords for safe storage
-    - choose secure encryption
-    - store key
-    - only set key once
+    - routes.js
 - ability to see and manage all passwords
-    - manageInfo.html
+    - viewPasswords.html
     - decrypt info on request from site
+    - don't show passwords until clicked on?

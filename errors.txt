@@ -1,2 +1,3 @@
 2: Database error
 3: Login error
+4: Password generation error
