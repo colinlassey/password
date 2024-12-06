@@ -7,15 +7,16 @@
 - take inputs for site name, site url, username, password, etc.
     - addPasswords.html
     - on submit, encrypt and store inputs
-    - IN PROGRESS
+    - DONE
     - STILL GOTTA MAKE EVERYTHING LOOK PRETTY
 - suggest secure password
     - in addPasswords.html
-    - certain number of random bytes
-    - allow user to choose parameters (lowercase, uppercase, numbers, symbols, # of each used)
+    - DONE
 - encrypt passwords for safe storage
     - routes.js
+    - DONE
 - ability to see and manage all passwords
     - viewPasswords.html
     - decrypt info on request from site
     - don't show passwords until clicked on?
+    - IN PROGRESS
