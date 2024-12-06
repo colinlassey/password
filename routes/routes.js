@@ -2,6 +2,8 @@ import encrypt from '../encrypt.js';
 import express from 'express';
 import sqlite3 from 'sqlite3';
 
+let loggedIn = false;
+
 let sql;
 
 const router = express.Router();
@@ -43,7 +45,9 @@ router.post('/login', async (req, res) => {
         }
 
         if (row) {
-            res.status(200).json({ message: 'Login successful' });
+            let userId = row.userId;
+            loggedIn = true;
+            res.status(200).json({ message: 'Login successful', userId: userId });
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
