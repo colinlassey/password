@@ -3,7 +3,7 @@ import express from 'express';
 import sqlite3 from 'sqlite3';
 
 let loggedIn = false;
-
+let userId;
 let sql;
 
 const router = express.Router();
@@ -45,9 +45,9 @@ router.post('/login', async (req, res) => {
         }
 
         if (row) {
-            let userId = row.userId;
+            userId = row.userId;
             loggedIn = true;
-            res.status(200).json({ message: 'Login successful', userId: userId });
+            res.status(200).json({ message: 'Login successful' });
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -126,6 +126,29 @@ router.post('/addCredentials', async (req, res) => {
             });
         }
     });
+});
+
+router.get('/getPasswords', (req, res) => {
+    if (loggedIn) {
+        sql = 'SELECT * FROM userPasswords WHERE userId = ?';
+        db.all(sql, [userId], async (err, row) => {
+            if (err) {
+                console.log(err);
+                res.status(500).json({ message: 'Database error', error: err.message });
+                return 2;
+            } 
+
+            if (row) {
+                // gets to here, apparently no rows? 
+                // maybe because id === 2 instead of 1?
+                // check db
+                console.log(row);
+            }
+        });
+    } else {
+        console.log('you are not logged in');
+        res.status(401).json({ message: 'Please log in first.' });
+    }
 });
 
 export default router;
