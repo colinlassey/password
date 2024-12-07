@@ -32,6 +32,14 @@ sql = `CREATE TABLE IF NOT EXISTS userPasswords(
 )`;
 db.run(sql);
 
+router.get('/isLoggedIn', (req, res) => {
+    if (loggedIn) {
+        res.status(200).json({ message: 'Logged in.' });
+    } else {
+        res.status(401).json({ message: 'Please log in.' });
+    }
+});
+
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
@@ -114,8 +122,8 @@ router.post('/addCredentials', async (req, res) => {
         if (row) {
             res.status(401).json({ message: 'Login already exists' });
         } else {
-            sql = 'INSERT INTO userPasswords(siteName, siteURL, username, password) VALUES (?,?,?,?)';
-            db.run(sql, [name, url, encrypted[0], encrypted[1]], (err) => {
+            sql = 'INSERT INTO userPasswords(userId, siteName, siteURL, username, password) VALUES (?,?,?,?,?)';
+            db.run(sql, [userId, name, url, encrypted[0], encrypted[1]], (err) => {
                 if (err) {
                     console.log(err);
                     res.status(500).json({ message: 'Database error', error: err.message });
@@ -138,11 +146,10 @@ router.get('/getPasswords', (req, res) => {
                 return 2;
             } 
 
-            if (row) {
-                // gets to here, apparently no rows? 
-                // maybe because id === 2 instead of 1?
-                // check db
-                console.log(row);
+            if (row.length > 0) {
+                res.status(200).json({ message: 'Response received.', data: row });
+            } else {
+                res.status(400).json({ message: 'No passwords have been saved.' });
             }
         });
     } else {

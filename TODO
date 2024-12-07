@@ -20,3 +20,7 @@
     - decrypt info on request from site
     - don't show passwords until clicked on?
     - IN PROGRESS
+
+Other to-do's:
+    - check if logged in to add credentials
+        - userId should be logged with credentials

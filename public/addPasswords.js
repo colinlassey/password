@@ -1,4 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
+const isLoggedIn = async () => {
+    try {
+        const response = await fetch('/api/isLoggedIn', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            main();
+        } else {
+            location.href = './login.html';
+        }
+    } catch (err) {
+        console.log(err);
+        location.href='./404.html';
+    }
+}
+
+const main = document.addEventListener('DOMContentLoaded', () => {
     const NAME = document.querySelector('#name');
     const URL = document.querySelector('#url');
     const USERNAME = document.querySelector('#username');
@@ -110,3 +130,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+isLoggedIn();
