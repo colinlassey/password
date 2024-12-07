@@ -19,8 +19,8 @@
     - viewPasswords.html
     - decrypt info on request from site
     - don't show passwords until clicked on?
-    - IN PROGRESS
+    - ALMOST DONE
 
 Other to-do's:
-    - check if logged in to add credentials
-        - userId should be logged with credentials
+    - allow users to change/edit credentials
+    - time out (log out) after 10-15 mins?

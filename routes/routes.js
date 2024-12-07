@@ -1,9 +1,11 @@
+import decrypt from '../decrypt.js';
 import encrypt from '../encrypt.js';
 import express from 'express';
 import sqlite3 from 'sqlite3';
 
 let loggedIn = false;
 let userId;
+let data;
 let sql;
 
 const router = express.Router();
@@ -34,7 +36,15 @@ db.run(sql);
 
 router.get('/isLoggedIn', (req, res) => {
     if (loggedIn) {
-        res.status(200).json({ message: 'Logged in.' });
+        res.status(200).json({ message: 'Logged in.' });        
+    } else {
+        res.status(401).json({ message: 'Please log in.' });
+    }
+});
+
+router.post('/isLoggedIn', (req, res) => {
+    if (loggedIn) {
+        res.status(200).json({ message: 'Logged in.', credentials: data });
     } else {
         res.status(401).json({ message: 'Please log in.' });
     }
@@ -147,15 +157,34 @@ router.get('/getPasswords', (req, res) => {
             } 
 
             if (row.length > 0) {
-                res.status(200).json({ message: 'Response received.', data: row });
+                for (let i = 0; i < row.length; i++) {
+                    let decrypted = [];
+                    decrypted = await decrypt(row[i].username, row[i].password);
+                    row[i].username = decrypted[0];
+                    row[i].password = decrypted[1];
+                }
+
+                res.status(200).json({ message: 'Response received.', credentials: row });
             } else {
                 res.status(400).json({ message: 'No passwords have been saved.' });
             }
         });
     } else {
-        console.log('you are not logged in');
         res.status(401).json({ message: 'Please log in first.' });
     }
+});
+
+router.post('/editPasswords', (req, res) => {
+    if (loggedIn) {
+        data = req.body;
+        res.status(200).json({ message: 'Success' });
+    } else {
+        res.status(401).json({ message: 'Please log in first.' });
+    }
+});
+
+router.post('/editCredentials', async (req, res) => {
+
 });
 
 export default router;
