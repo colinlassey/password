@@ -13,21 +13,23 @@ const SYMBOLS = document.querySelector('#symbols');
 const LENGTH = document.querySelector('#length');
 const CONFIRM = document.querySelector('#confirm');
 const SUBMIT = document.querySelector('#submit');
+let data = {};
 
-const isLoggedIn = async () => {
+const loginCheck = async () => {
     try {
         const response = await fetch('/api/isLoggedIn', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
         });
 
-        const data = await response.json();
+        data = await response.json();
 
         if (response.ok) {
             NAME.value = data.credentials.NAME;
             URL.value = data.credentials.URL;
             USERNAME.value = data.credentials.USER;
             PASSWORD.value = data.credentials.PASS;
+            editPassword();
         } else {
             location.href = './login.html';
         }
@@ -36,7 +38,7 @@ const isLoggedIn = async () => {
     }
 }
 
-const editPassword = document.addEventListener('DOMContentLoaded', async () => {
+const editPassword = async () => {
     let passwordLen;
     let params = [];
 
@@ -74,7 +76,7 @@ const editPassword = document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify({ params, passwordLen })
             });
 
-            const data = await response.json();
+            const data2 = await response.json();
 
             if (response.ok) {
                 // send back password suggestion
@@ -102,25 +104,29 @@ const editPassword = document.addEventListener('DOMContentLoaded', async () => {
             SUGGESTION.innerHTML = 'One of the required fields is empty. Please try again.';
         } else {
             try {
-                const name = NAME.value;
-                const url = URL.value;
-                const username = USERNAME.value;
-                const password = PASSWORD.value;
+                const beforeName = data.credentials.NAME;
+                const beforeUrl = data.credentials.URL;
+                const beforeUsername = data.credentials.USER;
+                const beforePassword = data.credentials.PASS;
+                const changeName = NAME.value;
+                const changeUrl = URL.value;
+                const changeUsername = USERNAME.value;
+                const changePassword = PASSWORD.value;
 
                 const response = await fetch('/api/editCredentials', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, url, username, password })
+                    body: JSON.stringify({ beforeName, beforeUrl, beforeUsername, beforePassword, changeName, changeUrl, changeUsername, changePassword })
                 });
 
-                const data = await response.json();
+                const data2 = await response.json();
 
                 if (response.ok) {
                     SUGGESTION.style.visibility = 'initial';
-                    SUGGESTION.innerHTML = data.message;
+                    SUGGESTION.innerHTML = data2.message;
                 } else {
                     SUGGESTION.style.visibility = 'initial';
-                    SUGGESTION.innerHTML = data.message;
+                    SUGGESTION.innerHTML = data2.message;
                     return 4;
                 }
             } catch (err) {
@@ -132,6 +138,8 @@ const editPassword = document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-});
+}
 
-isLoggedIn();
+const main = document.addEventListener('DOMContentLoaded', () => {
+    loginCheck();
+});

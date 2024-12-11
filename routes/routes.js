@@ -25,7 +25,8 @@ sql = `CREATE TABLE IF NOT EXISTS userLogin(
 db.run(sql);
 
 sql = `CREATE TABLE IF NOT EXISTS userPasswords(
-    userId INTEGER NOT NULL PRIMARY KEY,
+    credentialId INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId INTEGER NOT NULL,
     siteName TEXT NOT NULL,
     siteURL TEXT,
     username TEXT NOT NULL,
@@ -123,7 +124,7 @@ router.post('/addCredentials', async (req, res) => {
     let encrypted = [];
     encrypted = await encrypt(user, pass);
 
-    db.get('SELECT * FROM userPasswords WHERE siteURL = ? AND username = ?', [url, encrypted[0]], (err, row) => {
+    db.get('SELECT * FROM userPasswords WHERE userId = ? AND siteURL = ? AND username = ?', [userId, url, encrypted[0]], (err, row) => {
         if (err) {
             res.status(500).json({ message: 'Database error', error: err.message });
             return 2;
@@ -166,7 +167,7 @@ router.get('/getPasswords', (req, res) => {
 
                 res.status(200).json({ message: 'Response received.', credentials: row });
             } else {
-                res.status(400).json({ message: 'No passwords have been saved.' });
+                res.status(200).json({ message: 'No passwords have been saved.' });
             }
         });
     } else {
@@ -184,7 +185,45 @@ router.post('/editPasswords', (req, res) => {
 });
 
 router.post('/editCredentials', async (req, res) => {
+    const beforeName = req.body.beforeName;
+    const beforeUrl = req.body.beforeUrl;
+    const beforeUsername = req.body.beforeUsername;
+    const beforePassword = req.body.beforePassword;
+    const changeName = req.body.changeName;
+    const changeUrl = req.body.changeUrl;
+    const changeUsername = req.body.changeUsername;
+    const changePassword = req.body.changePassword;
 
+    let encryptedBefore = [];
+    encryptedBefore = await encrypt(beforeUsername, beforePassword);
+    let encryptedChange = [];
+    encryptedChange = await encrypt(changeUsername, changePassword);
+
+    db.get('SELECT * FROM userPasswords WHERE userId = ? AND siteURL = ? AND username = ?', [userId, beforeUrl, encryptedBefore[0]], (err, row) => {
+        if (err) {
+            res.status(500).json({ message: 'Database error', error: err.message });
+            return 2;
+        }
+
+        if (row) {
+            db.run('DELETE FROM userPasswords WHERE userId = ? AND siteURL = ? AND username = ?', [userId, beforeUrl, encryptedBefore[0]], (err) => {
+                if (err) {
+                    res.status(500).json({ message: 'Database error', error: err.message });
+                    return 2;
+                } else {
+                    db.run('INSERT INTO userPasswords(userId, siteName, siteURL, username, password) VALUES (?,?,?,?,?)', [userId, changeName, changeUrl, encryptedChange[0], encryptedChange[1]], (err) => {
+                        if (err) {
+                            res.status(500).json({ message: 'Database error', error: err.message });
+                        } else {
+                            res.status(200).json({ message: 'Success! Credentials updated.' });
+                        }
+                    });
+                }
+            });
+        } else {
+            res.status(401).json({ message: 'No such login' });
+        }
+    });
 });
 
 export default router;

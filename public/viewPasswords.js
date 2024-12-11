@@ -50,9 +50,6 @@ const getPasswords = async () => {
             showButton.textContent = 'Show Password';
             row.appendChild(showButton);
             let editButton = document.createElement('button');
-            // Test this: query should reflect 'i' being the id of the password that is clicked on
-            // Write this in routes.js, should have a spot for a query to be input
-            // onclick should automatically redirect to editPasswords.html too
             editButton.textContent = 'Edit Credentials';
             row.appendChild(editButton);
             editButton.onclick = async () => {

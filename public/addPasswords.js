@@ -8,7 +8,7 @@ const isLoggedIn = async () => {
         const data = await response.json();
 
         if (response.ok) {
-            main();
+            addPasswords();
         } else {
             location.href = './login.html';
         }
@@ -18,7 +18,7 @@ const isLoggedIn = async () => {
     }
 }
 
-const main = document.addEventListener('DOMContentLoaded', () => {
+const addPasswords = async () => {
     const NAME = document.querySelector('#name');
     const URL = document.querySelector('#url');
     const USERNAME = document.querySelector('#username');
@@ -129,6 +129,9 @@ const main = document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+}
+
+const main = document.addEventListener('DOMContentLoaded', () => {
+    isLoggedIn();
 });
 
-isLoggedIn();

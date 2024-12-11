@@ -22,5 +22,5 @@
     - ALMOST DONE
 
 Other to-do's:
-    - allow users to change/edit credentials
+    - copy addPasswords route to editPasswords, just change INSERT to UPDATE
     - time out (log out) after 10-15 mins?
